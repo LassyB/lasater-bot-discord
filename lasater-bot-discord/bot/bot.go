@@ -48,10 +48,16 @@ func newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {
 		return
 	}
 	// Respond to messages
-	secondaryCommand := strings.Split(message.Content, " ")[1]
-	fmt.Println(secondaryCommand)
-	switch secondaryCommand {
+	splitCommand := strings.Split(message.Content, " ")
+	fmt.Println(splitCommand[1])
+	switch splitCommand[1] {
 	case "ping":
 		discord.ChannelMessageSend(message.ChannelID, "I'm alive")
+	case "dnd":
+		dndSubcategory := splitCommand[2]
+		switch dndSubcategory {
+		case "spell":
+			discord.ChannelMessageSend(message.ChannelID, strings.Join(splitCommand[3:], " "))
+		}
 	}
 }
