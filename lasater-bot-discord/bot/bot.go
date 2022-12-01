@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"lasater-bot-discord/config"
+	"lasater-bot-discord/dnd"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -49,15 +50,14 @@ func newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {
 	}
 	// Respond to messages
 	splitCommand := strings.Split(message.Content, " ")
-	fmt.Println(splitCommand[1])
+	messageContents := ""
 	switch splitCommand[1] {
 	case "ping":
-		discord.ChannelMessageSend(message.ChannelID, "I'm alive")
+		messageContents = "pong"
 	case "dnd":
-		dndSubcategory := splitCommand[2]
-		switch dndSubcategory {
-		case "spell":
-			discord.ChannelMessageSend(message.ChannelID, strings.Join(splitCommand[3:], " "))
-		}
+		messageContents = dnd.HandleMessage(splitCommand[2], strings.Join(splitCommand[3:], " "))
+	}
+	if len(messageContents) > 0 {
+		discord.ChannelMessageSend(message.ChannelID, "```"+messageContents+"```")
 	}
 }
