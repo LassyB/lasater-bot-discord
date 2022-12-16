@@ -45,17 +45,14 @@ func newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {
 	if message.Author.ID == discord.State.User.ID {
 		return
 	}
-	if !strings.HasPrefix(message.Content, "!lasa") {
-		return
-	}
 	// Respond to messages
 	splitCommand := strings.Split(message.Content, " ")
 	messageContents := ""
-	switch splitCommand[1] {
-	case "ping":
+	switch splitCommand[0] {
+	case "!ping":
 		messageContents = "pong"
-	case "dnd":
-		messageContents = dnd.HandleMessage(splitCommand[2], strings.Join(splitCommand[3:], " "))
+	case "!dnd":
+		messageContents = dnd.HandleMessage(splitCommand[1], strings.Join(splitCommand[2:], " "))
 	}
 	if len(messageContents) > 0 {
 		discord.ChannelMessageSend(message.ChannelID, "```"+messageContents+"```")

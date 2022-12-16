@@ -14,7 +14,7 @@ type Spell struct {
 	Description []string `json:"desc"`
 	Range       string   `json:"range"`
 	Ritual      bool     `json:"ritual"`
-	//Damage      Damage `json:"damage"`
+	Damage      Damage   `json:"damage"`
 }
 
 type Damage struct {
@@ -25,6 +25,7 @@ func (m Spell) printSpell() string {
 	typeOfS := v.Type()
 	var sb strings.Builder
 	for i := 0; i < v.NumField(); i++ {
+		fmt.Println(v.Field(i).Type())
 		sb.WriteString(fmt.Sprintf("%s:\t%v\n", typeOfS.Field(i).Name, v.Field(i).Interface()))
 	}
 	return sb.String()
