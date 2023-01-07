@@ -52,9 +52,16 @@ func newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {
 	case "!ping":
 		messageContents = "pong"
 	case "!dnd":
-		messageContents = dnd.HandleMessage(splitCommand[1], strings.Join(splitCommand[2:], " "))
+		messageContents = dnd.HandleMessage(splitCommand[1:])
 	}
 	if len(messageContents) > 0 {
-		discord.ChannelMessageSend(message.ChannelID, "```"+messageContents+"```")
+		if len(messageContents) > 1900 {
+			messageContents = messageContents[:1900]
+		}
+		messageContents = fmt.Sprintf("```%s```", messageContents)
+		_, err := discord.ChannelMessageSend(message.ChannelID, messageContents)
+		if err != nil {
+			discord.ChannelMessageSend(message.ChannelID, "```"+err.Error()+"```")
+		}
 	}
 }
